@@ -61,13 +61,15 @@ Cornell_literacy <- read_excel("Correlations_CornellLiteracy.xlsx")
 
 head(Cornell_niveles)
 
-View(Cornell_niveles)
+View(Cornell_literacy)
 
 #Renombrando variables
 
 names(Cornell_niveles)
 
 
+View(Cornell_niveles)
+View(Cornell_literacy)
 Cornell_niveles<- Cornell_niveles %>% 
   rename(Induction_Pre=`Induction pre`,
          Induction_Post=`Induction Post`,
@@ -145,6 +147,10 @@ Base_Pre <- rbind(Cornell_niveles_Pre_Total,
                   Cornell_niveles_Pre_Obs_Cred,
                   Cornell_niveles_Pre_Assumptions)
 
+Base_Pre2_SinTotal <- rbind(Cornell_niveles_Pre_Induction,
+                  Cornell_niveles_Pre_Deduction,
+                  Cornell_niveles_Pre_Obs_Cred,
+                  Cornell_niveles_Pre_Assumptions)
 
 
 #Post
@@ -199,12 +205,20 @@ Cornell_niveles_Post <- Cornell_niveles %>%
                     Cornell_niveles_Post_Deduction,
                     Cornell_niveles_Post_Obs_Cred,
                     Cornell_niveles_Post_Assumptions)
+  
+  Base_Post2_SinTotal <- rbind(Cornell_niveles_Post_Induction,
+                     Cornell_niveles_Post_Deduction,
+                     Cornell_niveles_Post_Obs_Cred,
+                     Cornell_niveles_Post_Assumptions)
+  
 
 ##Uniendo las dos bases con rbind
   
     #Reducida a 3 column_to_rownames
 
     Cornell_niveles_Pre_Post<- rbind(Base_Pre,Base_Post)
+    
+    Cornell_niveles_Pre_Post_SinTotal<- rbind(Base_Pre2_SinTotal,Base_Post2_SinTotal)
 
     #Base completa con skills en columnas distintas
 
@@ -233,6 +247,24 @@ Cornell_niveles_Post <- Cornell_niveles %>%
             legend.title = element_text(size = 15),
             legend.text = element_text(size = 13))
     
+   
+    
+    Cornell_niveles_Pre_Post %>% 
+      ggplot(aes(y=Score,x=Skill,fill= Time))+
+      geom_boxplot(alpha = 0.6)+
+      scale_fill_manual(values = c("#F652A0", "#36EEE0"))+
+      labs(title="Cornell Scores",
+           subtitle = "Pre vs Post",
+           y="Critical thinking score",
+           x="Skill")+
+      theme_classic()+
+      theme(axis.text.x = element_text( size = 13),#Tamaños de letra
+            axis.title.y = element_text( size = 15),
+            axis.title.x = element_text( size = 15),
+            plot.title = element_text(size = 20,face = "bold"),
+            plot.subtitle = element_text(size = 15),
+            legend.title = element_text(size = 15),
+            legend.text = element_text(size = 13))
     
   #Export
     
@@ -265,6 +297,32 @@ Cornell_niveles_Post <- Cornell_niveles %>%
        height = 7,
        dpi = "retina")
   
+
+  #SinTotal
+  
+  SinTotal1<-Cornell_niveles_Pre_Post_SinTotal %>% 
+    ggplot(aes(y=Score,x=Skill,fill= Time))+
+    geom_boxplot(alpha = 0.6)+
+    scale_fill_manual(values = c("#F652A0", "#36EEE0"))+
+    labs(title="Cornell Scores",
+         subtitle = "Pre vs Post",
+         y="Critical thinking score",
+         x="Skill")+
+    theme_classic()+
+    theme(axis.text.x = element_text( size = 13),#Tamaños de letra
+          axis.title.y = element_text( size = 15),
+          axis.title.x = element_text( size = 15),
+          plot.title = element_text(size = 20,face = "bold"),
+          plot.subtitle = element_text(size = 15),
+          legend.title = element_text(size = 15),
+          legend.text = element_text(size = 13))
+  
+  #Export
+  ggsave(plot = SinTotal1, filename = "./Graficas_Definitivas/SinTotal_Boxplot_Cornell_scores.png", 
+         width = 11, 
+         height = 7,
+         type = "cairo",
+         dpi = "retina")
 
 #Boxplot con Geom Point
   
@@ -317,6 +375,32 @@ ggsave(plot = Plot2, filename = "./Graficas_Definitivas/SVG/Boxplot_Cornell_scor
        height = 7,
        dpi = "retina")
 
+#Sintotal
+
+ Sintotal2<- Cornell_niveles_Pre_Post_SinTotal %>% 
+  ggplot(aes(y=Score,x=Skill,fill= Time))+
+  geom_boxplot(alpha = 0.6)+
+  geom_point(alpha = 0.4)+ #Esta linea agrega los puntos sobre el boxplot
+  scale_fill_manual(values = c("#F652A0", "#36EEE0"))+
+  labs(title="Cornell Scores",
+       subtitle = "Pre vs Post",
+       y="Critical thinking score",
+       x="Skill")+
+  theme_classic()+
+  theme(axis.text.x = element_text( size = 13),#Tamaños de letra
+        axis.title.y = element_text( size = 15),
+        axis.title.x = element_text( size = 15),
+        plot.title = element_text(size = 20,face = "bold"),
+        plot.subtitle = element_text(size = 15),
+        legend.title = element_text(size = 15),
+        legend.text = element_text(size = 13))
+
+  #Export
+ ggsave(plot = Sintotal2, filename = "./Graficas_Definitivas/Sintotal2_Boxplot_Cornell_scores_GeomPoint.png", 
+        width = 11, 
+        height = 7,
+        type = "cairo",
+        dpi = "retina")
 
 
 
@@ -370,6 +454,35 @@ ggsave(plot = Plot3, filename = "./Graficas_Definitivas/SVG//Boxplot_Cornell_sco
        width = 11, 
        height = 7,
        dpi = "retina")
+
+
+#Sintotal
+
+  Sintotal3 <- Cornell_niveles_Pre_Post_SinTotal %>% 
+  ggplot(aes(y=Score,x=Skill,fill= Time))+
+  geom_boxplot(alpha = 0.6)+
+  geom_jitter(alpha = 0.6)+
+  scale_fill_manual(values = c("#F652A0", "#36EEE0"))+
+  labs(title="Cornell Scores",
+       subtitle = "Pre vs Post",
+       y="Critical thinking score",
+       x="Skill")+
+  theme_classic()+
+  theme(axis.text.x = element_text( size = 13),#Tamaños de letra
+        axis.title.y = element_text( size = 15),
+        axis.title.x = element_text( size = 15),
+        plot.title = element_text(size = 20,face = "bold"),
+        plot.subtitle = element_text(size = 15),
+        legend.title = element_text(size = 15),
+        legend.text = element_text(size = 13))
+
+  
+  #Export
+  ggsave(plot = Sintotal3, filename = "./Graficas_Definitivas/SinTotal_Boxplot_Cornell_scores_Jitter.png", 
+         width = 11, 
+         height = 7,
+         type = "cairo",
+         dpi = "retina")
 
 
 
@@ -438,13 +551,22 @@ Barplot_Means_Cornell<-Mean_Cornell_niveles_Pre_Post %>%
   
   Cornell_niveles_Pre_Post %>% 
     inference(y =Score , x =Time, statistic = "mean", type = "ht", 
-              null = 0, alternative = "twosided", method = "theoretical")
+              null = 0, alternative = "greater", method = "theoretical")
   
   Cornell_niveles_Pre_Post %>% 
     inference(y =Score , x =Time, statistic = "mean", type = "ci", 
               null = 0, alternative = "twosided", method = "theoretical")
   
   
+  Ttest_Total_Cornell_niveles_Pre_Post<-Cornell_niveles_Pre_Post %>% 
+    filter(Skill=="Total")
+  
+  #T test corregido
+  
+  Ttest_Total_Cornell_niveles_Pre_Post %>% 
+    inference(y =Score , x =Time, statistic = "mean", type = "ht", 
+              null = 0, alternative = "less", method = "theoretical")
+    
 
   #Export
    
